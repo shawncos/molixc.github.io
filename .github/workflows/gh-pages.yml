@@ -1,33 +1,30 @@
-name: Build and Deploy Jekyll Site
+name: Build Jekyll site
 on:
-  # 可以指定在哪些事件触发工作流，如push到main分支
-  push:
-    branches:
-      - main
+ push:
+   branches: ["main"]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # 检出代码
-      - name: Checkout code
-        uses: actions/checkout@v3
-      # 安装Ruby环境
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          # 可以指定具体的Ruby版本
-          ruby-version: 3.1.2
-      # 安装Jekyll依赖
-      - name: Install Jekyll dependencies
-        run: |
-          gem install jekyll bundler
-      # 构建Jekyll网站
-      - name: Build Jekyll site
-        run: |
-          bundle exec jekyll build
-      # 部署到GitHub Pages
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Build
+        uses: actions/jekyll-build-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: 'gh-pages' # 默认分支，可以根据需要更改
+        id: deployment
+        uses: actions/deploy-pages@v4
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
