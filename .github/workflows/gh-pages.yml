@@ -1,31 +1,16 @@
-name: GitHub Pages
-
+name: Build and Deploy Jekyll Site
 on:
   push:
     branches:
-      - main  # 如果你的默认分支是 main
-
+      - main
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and Deploy
+        uses: helaili/jekyll-action@v2
         with:
-          ruby-version: 2.7  # 根据你的需求调整
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
-
-      - name: Build site
-        run: bundle exec jekyll build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_branch: 'gh-pages' # 默认分支，可以根据需要更改
