@@ -9,6 +9,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby - setup - ruby@v1
+        with:
+          ruby - version: '3.0.0'
       - name: Build and Deploy
         uses: helaili/jekyll-action@v2
         with:
