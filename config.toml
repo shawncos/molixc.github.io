@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "ht://xcao.live"
+base_url = "http://xcao.live"
 theme = "papermod"
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
